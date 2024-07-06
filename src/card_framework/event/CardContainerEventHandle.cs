@@ -35,6 +35,9 @@ namespace src.card_framework.@event
             if (worldPoint.y < -2)
             {
                 Target.SetAbsPosition(worldPoint);
+                Vector3 eulerAngles = Target.GetLocalEulerAngles();
+                Target.SetLocalEulerAngles(new Vector3(eulerAngles.x, eulerAngles.y, 0));
+                Target.SetLocalLayer(999);
             }
             else
             {
@@ -52,7 +55,7 @@ namespace src.card_framework.@event
                 {
                     BaseComponent baseComponent = BeanFactoryUtil.Get(hit2D.collider.gameObject.name);
 
-                    if (baseComponent is ComponentContainer container)
+                    if (baseComponent != null)
                     {
                         Vector3 point = worldPoint;
                         point.z = 0;
@@ -60,33 +63,33 @@ namespace src.card_framework.@event
                         if (building == null)
                         {
                             building = BeanFactoryUtil.GetInstance<BuildingPlace>();
-                            container.AddComponent(building);
+                            Target.AddComponent(building);
                             building.Start();
-                            container.GetParent()?.DoSortLayer();
-                            container.ResortLayer(building);
+                            Target.GetParent()?.DoSortLayer();
+                            Target.ResortLayer(building);
 
                             arrows = new CardPlaceArrows();
-                            container.AddComponent(arrows);
+                            Target.AddComponent(arrows);
                             arrows.Start();
-                            container.GetParent()?.DoSortLayer();
-                            container.ResortLayer(arrows);
+                            Target.GetParent()?.DoSortLayer();
+                            Target.ResortLayer(arrows);
                         }
                         else
                         {
-                            if (!container.ContainComponent(building.RegisterName()))
+                            if (!Target.ContainComponent(building.RegisterName()))
                             {
                                 building.SetActive(true);
-                                container.AddComponent(building);
-                                container.GetParent()?.DoSortLayer();
-                                container.ResortLayer(building);
+                                Target.AddComponent(building);
+                                Target.GetParent()?.DoSortLayer();
+                                Target.ResortLayer(building);
                             }
                         
-                            if (!container.ContainComponent(arrows.RegisterName()))
+                            if (!Target.ContainComponent(arrows.RegisterName()))
                             {
                                 arrows.SetActive(true);
-                                container.AddComponent(arrows);
-                                container.GetParent()?.DoSortLayer();
-                                container.ResortLayer(arrows);
+                                Target.AddComponent(arrows);
+                                Target.GetParent()?.DoSortLayer();
+                                Target.ResortLayer(arrows);
                             }
                         }
                 
@@ -106,34 +109,51 @@ namespace src.card_framework.@event
             int mask = 1 << 8;
             RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, Vector2.zero,float.PositiveInfinity, mask);
 
-            if (hit2D.collider != null)
+            if (building == null)
             {
-                BaseComponent baseComponent = BeanFactoryUtil.Get(hit2D.collider.gameObject.name);
-
-                if (baseComponent is ComponentContainer container)
-                {
-                    Vector3 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    point.z = 0;
-                    Building building = new Building(container.GetChildrenCount() + 1, point, container);
-                    container.AddComponent(building);
-                    building.Start();
-                    
-                    Target.GetParent().RemoveComponent(Target.RegisterName());
-                    Target.SetActive(false);
-                    
-                    if (container.GetParent() != null)
-                    {
-                        container.GetParent().DoSortLayer();
-                    }
-
-                    container.ResortLayer(building);
-                }
+                Target.SetOffset(Vector3.zero);
             }
+            else
+            {
+                if (hit2D.collider != null)
+                {
+                    BaseComponent baseComponent = BeanFactoryUtil.Get(hit2D.collider.gameObject.name);
 
-            building.GetParent().RemoveComponent(building.RegisterName());
-            arrows.GetParent().RemoveComponent(arrows.RegisterName());
-            building.SetActive(false);
-            arrows.SetActive(false);
+                    if (baseComponent is ComponentContainer container)
+                    {
+                        Vector3 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        point.z = 0;
+                        Building building = new Building(container.GetChildrenCount() + 1, point, container);
+                        container.AddComponent(building);
+                        building.Start();
+                    
+                        Target.SetOffset(Vector3.zero);
+                        Target.GetParent().RemoveComponent(Target.RegisterName());
+                        Target.SetActive(false);
+                    
+                        if (container.GetParent() != null)
+                        {
+                            container.GetParent().DoSortLayer();
+                        }
+
+                        container.ResortLayer(building);
+                    }
+                }
+
+                Target.RemoveComponent(building.RegisterName());
+                Target.RemoveComponent(arrows.RegisterName());
+                building.SetActive(false);
+                arrows.SetActive(false);
+            }
+            
+            Target.GetParent().DoSortLayer();
+        }
+
+        public override void OnClick()
+        {
+            Draging = false;
+            Target.SetOffset(Vector3.zero);
+            Target.GetParent().DoSortLayer();
         }
 
         public override bool IsOnDrag()

@@ -59,7 +59,7 @@ namespace src.card_framework.render
                     clamp = Mathf.Clamp(30f * curve.y * clamp, -60f, 60f);
                 }
 
-                Transform.eulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, clamp);
+                Transform.eulerAngles = new Vector3(eulerAngles.x, eulerAngles.y, view.AbsEulerAngles.z + clamp);
             }
             else
             {

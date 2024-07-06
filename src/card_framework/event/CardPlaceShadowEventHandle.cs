@@ -53,8 +53,7 @@ namespace src.card_framework.@event
             clamp = Mathf.Clamp(-arrow.x * 1.8f * pow * clamp, -60f, 60f);
             Debug.Log(arrow.x);
         
-            Target.SetLocalEulerAngles(new Vector3(eulerAngles.x, eulerAngles.y,
-                clamp));
+            Target.SetLocalEulerAngles(new Vector3(eulerAngles.x, eulerAngles.y, clamp));
         }
 
         public override void EndDrag()

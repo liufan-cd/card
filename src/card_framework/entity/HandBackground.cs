@@ -16,7 +16,7 @@ namespace src.card_framework.entity
 
         public override void BeforeChildrenStart()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 8; i++)
             {
                 AddComponent(new CardContainer(i));
             }
@@ -28,16 +28,48 @@ namespace src.card_framework.entity
             float width = Model.SizeX;
             float offset = -width / 2;
             width /= Children.Count + 1;
-        
+            BaseComponent dragChild = null;
+            
+            while ((child = child.NextComponent) != Root)
+            {
+                if (child.GetEventHandle().IsOnDrag())
+                {
+                    dragChild = child;
+                    ChainNode(child.PreComponent, child.NextComponent);
+                    break;
+                }
+            }
+
+            BaseComponent pre = Root;
+            child = Root;
+            
             while ((child = child.NextComponent) != Root)
             {
                 offset += width;
 
-                if (!child.GetEventHandle().IsOnDrag())
+                if (dragChild == null || dragChild.GetAbsPosition().x > GetAbsPosition().x + offset)
                 {
-                    child.SetLocalPosition(new Vector3(offset, 0, 0));
-                    child.SetLocalEulerAngles(new Vector3(0, 0, 0));
+                    child.SetLocalPosition(new Vector3(offset, -(offset / 10) * (offset / 10), 0));
+                    Vector3 eulerAngles = child.GetAbsEulerAngles();
+                    child.SetAbsEulerAngles(new Vector3(eulerAngles.x, eulerAngles.y, offset * -2));
                 }
+                else
+                {
+                    ChainNode(pre, dragChild);
+                    ChainNode(dragChild, child);
+                    pre = dragChild;
+                    child = dragChild;
+                    dragChild = null;
+                    continue;
+                }
+                
+                pre = child;
+            }
+
+            if (dragChild != null)
+            {
+                ChainNode(Root.PreComponent, dragChild);
+                ChainNode(dragChild, Root);
             }
         }
     }
