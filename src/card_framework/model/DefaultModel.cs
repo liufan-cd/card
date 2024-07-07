@@ -19,17 +19,12 @@ namespace src.card_framework.model
             {
                 float positionX = config.TryGetValue("position_x", out String value) ? float.Parse(value) : 0;
                 float positionY = config.TryGetValue("position_y", out value) ? float.Parse(value) : 0;
-        
                 float sizeX = config.ContainsKey("size_x") ? float.Parse(config["size_x"]) : 1;
                 float sizeY = config.ContainsKey("size_y") ? float.Parse(config["size_y"]) : 0;
-
-                positionX = (positionX - 2880 + (sizeX / 2)) / 100;
-                positionY = (1620 - positionY - (sizeY / 2)) / 100;
-
                 this.AbsPosition = new Vector3(positionX, positionY, 0);
                 this.LocalScale = new Vector3(1, 1, 1);
-                this.SizeX = sizeX / 100;
-                this.SizeY = sizeY / 100;
+                this.SizeX = sizeX;
+                this.SizeY = sizeY;
             }
         }
 
