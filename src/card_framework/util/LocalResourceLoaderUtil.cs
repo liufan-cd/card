@@ -13,6 +13,7 @@ namespace src.card_framework.util
 
         public static Dictionary<String, Dictionary<String, String>> configMap = new();
         public static JSONObject jsonObject;
+        private static string _picPrefix = "picture\\";
 
         public static LocalResourceLoaderUtil GetLoader()
         {
@@ -21,7 +22,7 @@ namespace src.card_framework.util
 
         public static void LoadSystemResource()
         {
-            jsonObject = ParseJson("Assets\\Assets\\Resources\\parse_position.json");
+            jsonObject = ParseJson("Assets\\Assets\\Resources\\json\\parse_position.json");
         }
 
         public static JSONObject ParseJson(string path)
@@ -100,7 +101,7 @@ namespace src.card_framework.util
             {
                 return configMap[name];
             }
-            else
+            else if (jsonObject.JsonObjects.ContainsKey(name))
             {
                 JSONObject target = jsonObject.GetJsonObject(name);
 
@@ -113,6 +114,10 @@ namespace src.card_framework.util
                 
                 configMap.Add(name, result);
                 return result;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -141,7 +146,7 @@ namespace src.card_framework.util
         public Sprite LoadSprite(String path)
         {
             // todo absolute path
-            return Resources.Load<Sprite>(path);
+            return Resources.Load<Sprite>(_picPrefix + path);
         }
 
         public Dictionary<string, Sprite> LoadSpriteAll(String path)

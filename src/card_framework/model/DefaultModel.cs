@@ -26,6 +26,8 @@ namespace src.card_framework.model
                 this.SizeX = sizeX;
                 this.SizeY = sizeY;
             }
+            
+            this.LocalScale = new Vector3(1, 1, 1);
         }
 
         public virtual AbsView CreateViewOrigin()
