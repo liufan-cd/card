@@ -43,6 +43,7 @@ namespace src.card_framework.entity
         public override void AfterChildrenStart()
         {
             SetAbsScale(new Vector3(0.5f, 0.5f, 1));
+            SetAbsPosition(Root.NextComponent.GetAbsPosition());
             
             foreach (BaseComponent child in Children.Values)
             {

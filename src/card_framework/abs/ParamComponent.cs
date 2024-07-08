@@ -67,7 +67,7 @@ namespace src.card_framework.abs
             return _isActive;
         }
 
-        public void SetActive(bool isActive)
+        public virtual void SetActive(bool isActive)
         {
             this.View.IsActive = isActive;
             this.Render.DoRender(View);

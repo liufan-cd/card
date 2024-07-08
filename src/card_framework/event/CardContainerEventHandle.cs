@@ -30,7 +30,6 @@ namespace src.card_framework.@event
         public override void OnDrag()
         {
             Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(worldPoint);
 
             if (worldPoint.y < -2)
             {
@@ -123,9 +122,9 @@ namespace src.card_framework.@event
                     {
                         Vector3 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         point.z = 0;
-                        Building building = new Building(container.GetChildrenCount() + 1, point, container);
-                        container.AddComponent(building);
-                        building.Start();
+                        BuildingPlaceFace buildingPlaceFace = new BuildingPlaceFace(container.GetChildrenCount() + 1, point, container);
+                        container.AddComponent(buildingPlaceFace);
+                        buildingPlaceFace.Start();
                     
                         Target.SetOffset(Vector3.zero);
                         Target.GetParent().RemoveComponent(Target.RegisterName());
@@ -136,7 +135,7 @@ namespace src.card_framework.@event
                             container.GetParent().DoSortLayer();
                         }
 
-                        container.ResortLayer(building);
+                        container.ResortLayer(buildingPlaceFace);
                     }
                 }
 

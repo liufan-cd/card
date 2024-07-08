@@ -145,6 +145,16 @@ namespace src.card_framework.abs
             }
         }
 
+        public override void SetActive(bool isActive)
+        {
+            base.SetActive(isActive);
+        
+            foreach (BaseComponent child in Children.Values)
+            {
+                child.SetActive(isActive);
+            }
+        }
+
         public override void FixUpdate()
         {
             this.LocalFixUpdate();

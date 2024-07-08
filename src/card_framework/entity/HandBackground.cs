@@ -7,6 +7,9 @@ namespace src.card_framework.entity
 {
     public class HandBackground : ComponentContainer
     {
+        private int tick = 0;
+        int i;
+
         public HandBackground () {
             this.SetName("hand_background");
             Dictionary<string, string> config = GetConfig();
@@ -16,7 +19,7 @@ namespace src.card_framework.entity
 
         public override void BeforeChildrenStart()
         {
-            for (int i = 0; i < 8; i++)
+            for (i = 0; i < 8; i++)
             {
                 AddComponent(new CardContainer(i));
             }
@@ -70,6 +73,28 @@ namespace src.card_framework.entity
             {
                 ChainNode(Root.PreComponent, dragChild);
                 ChainNode(dragChild, Root);
+            }
+        }
+
+        public override void FixUpdate()
+        {
+            tick++;
+
+            if (tick == 10)
+            {
+                tick = 0;
+                
+                if (i < 15)
+                {
+                    CardContainer container = new CardContainer(i++);
+                    AddComponent(container);
+                    container.Start();
+                    DoSortLayer();
+                }
+                else
+                {
+                    ResortLayer(Root.NextComponent);
+                }
             }
         }
     }
