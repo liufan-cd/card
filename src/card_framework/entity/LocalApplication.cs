@@ -26,8 +26,8 @@ namespace src.card_framework.entity
             // load by properties
             camera.aspect = 1920f / 1080f;
             LocalConstant.GLOBAL_SCALE = 10.8f / 19.20f * camera.aspect;
-            // this.componentContainer = new MainBackground1();
-            this.componentContainer = new HandBackground();
+            this.componentContainer = new MainBackground1();
+            // this.componentContainer = new HandBackground();
             HashSet<String> set = new HashSet<string>();
             componentContainer.Start();
         }
