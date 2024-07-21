@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using src.card_framework.abs;
+using src.card_framework.entity;
 using src.card_framework.util;
 using UnityEngine;
 
-namespace src.card_framework.entity
+namespace src.card_framework.common
 {
     public class LocalApplication : MonoBehaviour
     {
